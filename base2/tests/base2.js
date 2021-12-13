@@ -6,6 +6,8 @@ const chai = require('chai');
 const expect = chai.expect;
 chai.use(require('chai-as-promised'));
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
 
 describe('base2', () => {
   // Use a local provider.
@@ -34,7 +36,7 @@ describe('base2', () => {
 
     assert.ok(counterAccount.authority.equals(provider.wallet.publicKey));
     assert.ok(counterAccount.count.toNumber() === 0);
-  })
+  });
 
   it('Increments a counter', async () => {
     await program.rpc.increment({
@@ -68,28 +70,29 @@ describe('base2', () => {
 
  });
 
-// The below fails with
+// The below fails when the delay is not used
 // Error: failed to send transaction: Transaction simulation failed: This transaction has already been processed
 // This happens from the client not updating its 'recent blockhash', so this would lead to double spend attack
-// Not sure how to structure anchor test client to move to next blockhash
 
-//  it('Increments a counter 2nd time', async () => {
-//    await program.rpc.increment({
-//      accounts: {
-//        counter: counterAcctKeypair.publicKey,
-//        authority: provider.wallet.publicKey,
-//      },
-//    });
-//
-//    const counterAccount = await program.account.counter.fetch(counterAcctKeypair.publicKey);
-//
-//    assert.ok(counterAccount.authority.equals(provider.wallet.publicKey));
-//    assert.ok(counterAccount.count.toNumber() == 1);
-//  });
+  it('Increments a counter 2nd time', async () => {
 
+    await delay(1000);
+    await program.rpc.increment({
+      accounts: {
+        counter: counterAcctKeypair.publicKey,
+        authority: provider.wallet.publicKey,
+      },
+    });
 
+    const counterAccount = await program.account.counter.fetch(counterAcctKeypair.publicKey);
 
+    assert.ok(counterAccount.authority.equals(provider.wallet.publicKey));
+    assert.ok(counterAccount.count.toNumber() == 2);
+ });
 
 
-})
+
+
+
+});
 
