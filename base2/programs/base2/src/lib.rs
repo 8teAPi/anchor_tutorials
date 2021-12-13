@@ -6,12 +6,12 @@ use anchor_lang::prelude::*;
  * increment it.
  */
 
-
 declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
 
 #[program]
-pub mod base2 {
+mod base2 {
     use super::*;
+
     pub fn create(ctx: Context<Create>, authority: Pubkey) -> ProgramResult {
         let counter = &mut ctx.accounts.counter;
         counter.authority = authority;
@@ -24,21 +24,20 @@ pub mod base2 {
         counter.count += 1;
         Ok(())
     }
-    
 }
 
 #[derive(Accounts)]
-pub struct Create<'info>{
+pub struct Create<'info> {
     // why 40?
     #[account(init, payer = user, space = 8 + 40)]
     pub counter: Account<'info, Counter>,
     #[account(mut)]
     pub user: Signer<'info>,
-    pub system_program: Program<'info, System>, 
+    pub system_program: Program<'info, System>,
 }
 
 #[derive(Accounts)]
-pub struct Increment<'info>{
+pub struct Increment<'info> {
     /*
      * has_one: enforces the constraint that 
      * Increment.counter.authority == Increment.authority.key
@@ -61,3 +60,4 @@ pub struct Counter {
     pub authority: Pubkey,
     pub count: u64,
 }
+
