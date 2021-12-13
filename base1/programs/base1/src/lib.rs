@@ -27,8 +27,8 @@ mod basic_1 {
      * generic result/error of a solana program
      */
     pub fn initialize(ctx: Context<Initialize>, data:u64) -> ProgramResult {
-        let my_account = &mut ctx.accounts.my_account;
-        my_account.data = data;
+        let y_account = &mut ctx.accounts.y_account;
+        y_account.data = data;
         Ok(())
     }
 
@@ -37,8 +37,8 @@ mod basic_1 {
      * input struct Update
      */
     pub fn update(ctx: Context<Update>, data: u64) -> ProgramResult {
-        let my_account = &mut ctx.accounts.my_account;
-        my_account.data = data;
+        let y_account = &mut ctx.accounts.y_account;
+        y_account.data = data;
         Ok(())
     }
 }
@@ -91,14 +91,14 @@ pub struct Initialize <'info>{
      * system_program: required by the runtime to create the account.
      */
     #[account(init, payer = user, space = 8 + 8)]
-    pub my_account: Account<'info, MyAccount>,
+    pub y_account: Account<'info, XAccount>,
     pub system_program: Program<'info, System>,   
 }
 
 #[derive(Accounts)]
 pub struct Update<'info> {
     #[account(mut)]
-    pub my_account: Account<'info, MyAccount>,
+    pub y_account: Account<'info, XAccount>,
 }
 
 /*
@@ -111,6 +111,6 @@ pub struct Update<'info> {
  * another.
  */
 #[account]
-pub struct MyAccount {
+pub struct XAccount {
     pub data: u64,
 }

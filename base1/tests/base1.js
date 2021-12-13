@@ -20,7 +20,7 @@ describe("basic-1", () => {
     // Create the new account and initialize it with the program.
     await program.rpc.initialize(new anchor.BN(1234), {
       accounts: {
-        myAccount: myAccount.publicKey,
+        yAccount: myAccount.publicKey,
         user: provider.wallet.publicKey,
         systemProgram: SystemProgram.programId,
       },
@@ -28,7 +28,7 @@ describe("basic-1", () => {
     });
 
     // Fetch the newly created account from the cluster.
-    const account = await program.account.myAccount.fetch(myAccount.publicKey);
+    const account = await program.account.xAccount.fetch(myAccount.publicKey);
 
     // Check it's state was initialized.
     assert.ok(account.data.eq(new anchor.BN(1234)));
@@ -41,12 +41,12 @@ describe("basic-1", () => {
     // Invoke the update rpc.
     await program.rpc.update(new anchor.BN(4321), {
       accounts: {
-        myAccount: myAccount.publicKey,
+        yAccount: myAccount.publicKey,
       },
     });
 
     // Fetch the newly updated account.
-    const account = await program.account.myAccount.fetch(myAccount.publicKey);
+    const account = await program.account.xAccount.fetch(myAccount.publicKey);
 
     // Check it's state was mutated.
     assert.ok(account.data.eq(new anchor.BN(4321)));
